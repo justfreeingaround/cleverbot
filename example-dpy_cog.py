@@ -7,6 +7,9 @@ import httpx
 from cleverbot import SERVICES, CleverBotClient
 from discord.ext import commands
 
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
+}
 
 class CleverBotCog(commands.Cog):
 
@@ -17,7 +20,7 @@ class CleverBotCog(commands.Cog):
         
         if identifier not in self.clients:
             url, service_endpoint = random.choice(SERVICES.values())
-            self.clients[identifier] = await CleverBotClient.initialise(httpx.AsyncClient(), url=url, service_endpoint=service_endpoint)
+            self.clients[identifier] = await CleverBotClient.initialise(httpx.AsyncClient(headers=headers, timeout=30.0, follow_redirects=True), url=url, service_endpoint=service_endpoint)
             
         return self.clients[identifier]
 
